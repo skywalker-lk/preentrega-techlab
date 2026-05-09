@@ -1,4 +1,4 @@
-package com.techlab.ecommerce.exception;
+package exception;
 
 /**
  * Excepción personalizada que se lanza cuando se busca un producto

@@ -1,6 +1,6 @@
-package com.techlab.ecommerce.util;
+package util;
 
-import com.techlab.ecommerce.exception.StockInsuficienteException;
+import exception.StockInsuficienteException;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

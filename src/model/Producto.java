@@ -1,4 +1,4 @@
-package com.techlab.ecommerce.model;
+package model;
 
 /**
  * Modelo de dominio: representa un producto del catálogo.
@@ -29,7 +29,8 @@ public class Producto {
     }
 
     // Constructor vacío: útil para crear un Producto y completarlo
-    // con setters después. También lo necesitará Spring/JPA más adelante en el curso.
+    // con setters después. También lo necesitará Spring/JPA más adelante en el
+    // curso.
     public Producto() {
     }
 

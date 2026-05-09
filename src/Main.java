@@ -1,13 +1,11 @@
-//package src;
-
-import com.techlab.ecommerce.exception.ProductoNoEncontradoException;
-import com.techlab.ecommerce.exception.StockInsuficienteException;
-import com.techlab.ecommerce.model.Producto;
-import com.techlab.ecommerce.service.ProductoService;
-import com.techlab.ecommerce.ui.MenuProducto;
-import com.techlab.ecommerce.util.Validador;
-
 import java.util.Scanner;
+
+import exception.ProductoNoEncontradoException;
+import exception.StockInsuficienteException;
+import model.Producto;
+import service.ProductoService;
+import ui.MenuProducto;
+import util.Validador;
 
 /**
  * Clase principal: punto de entrada del programa.

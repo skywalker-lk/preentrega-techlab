@@ -1,8 +1,8 @@
-package com.techlab.ecommerce.ui;
+package ui;
 
-import com.techlab.ecommerce.model.Producto;
-import com.techlab.ecommerce.service.ProductoService;
-import com.techlab.ecommerce.util.Validador;
+import model.Producto;
+import service.ProductoService;
+import util.Validador;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,9 +11,9 @@ import java.util.Scanner;
  * Maneja la interacción con el usuario a través del menú de consola.
  *
  * Esta clase es responsable de:
- *  - Mostrar el menú al usuario.
- *  - Pedirle los datos necesarios para cada operación.
- *  - Mostrar los resultados o mensajes informativos.
+ * - Mostrar el menú al usuario.
+ * - Pedirle los datos necesarios para cada operación.
+ * - Mostrar los resultados o mensajes informativos.
  *
  * No contiene lógica de negocio: para todo lo que tenga que ver
  * con guardar, buscar, actualizar o eliminar productos, delega en

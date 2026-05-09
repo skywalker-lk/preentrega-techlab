@@ -1,8 +1,9 @@
-package com.techlab.ecommerce.service;
+package service;
 
-import com.techlab.ecommerce.exception.ProductoNoEncontradoException;
-import com.techlab.ecommerce.model.Producto;
-import com.techlab.ecommerce.util.Validador;
+import model.Producto;
+import util.Validador;
+
+import exception.ProductoNoEncontradoException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,10 @@ import java.util.List;
  * Capa de servicio: contiene la lógica de negocio del sistema.
  *
  * Es responsable de:
- *  - Mantener la colección de productos.
- *  - Asignar el id al guardar un nuevo producto.
- *  - Validar los datos antes de guardar o actualizar.
- *  - Buscar, modificar y eliminar productos por id.
+ * - Mantener la colección de productos.
+ * - Asignar el id al guardar un nuevo producto.
+ * - Validar los datos antes de guardar o actualizar.
+ * - Buscar, modificar y eliminar productos por id.
  *
  * No tiene Scanner ni System.out: no interactúa con el usuario.
  * Quien quiera mostrar mensajes o leer datos lo hace por afuera
