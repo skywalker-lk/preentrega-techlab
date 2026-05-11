@@ -1,5 +1,6 @@
 package com.techlab.ecommerce.service;
 
+import com.techlab.ecommerce.exception.CategoriaNoEncontradoException;
 import com.techlab.ecommerce.model.categorias.Categoria;
 import com.techlab.ecommerce.model.categorias.SubCategoria;
 import com.techlab.ecommerce.model.productos.Producto;
@@ -58,5 +59,27 @@ public class CategoriaService {
 
     public List<SubCategoria> listarTodas() {
         return subcategorias;
+    }
+
+    /**
+     * Busca una subcategoría por su nombre exacto (case-insensitive).
+     * @throws CategoriaNoEncontradoException si no existe.
+     */
+    public SubCategoria buscarSubCategoriaPorNombre(String nombre) {
+        for (SubCategoria s : subcategorias) {
+            if (s.getNombre().equalsIgnoreCase(nombre)) {
+                return s;
+            }
+        }
+        throw new CategoriaNoEncontradoException("No se encontró una subcategoría con nombre '" + nombre + "'.");
+    }
+
+    /**
+     * Elimina una subcategoría por nombre.
+     * @throws CategoriaNoEncontradoException si no existe.
+     */
+    public void eliminarSubCategoria(String nombre) {
+        SubCategoria s = buscarSubCategoriaPorNombre(nombre);
+        subcategorias.remove(s);
     }
 }
