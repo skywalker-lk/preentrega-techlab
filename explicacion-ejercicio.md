@@ -16,7 +16,7 @@ carpetas como se debia entregar.
 
 - Primero comence a modificar el módulo de Productos que es el que se venía desarrollando en las clases prácticas del 
 curso de Java, a partir de ahi comence realizar la busqueda por nombre que me faltaba, que era muy parecida 
-a la búsqueda por ID que ya estaba implementada, mediante un menu elije uno y otro.
+a la búsqueda por ID que ya estaba implementada, permitir que mediante un submenu se elija una y otra forma de busqueda.
 
 - Después continue con la creacion de bebida y comida, luego pase producto a una carpeta para organizar un poco, a partir 
 de ahi que herencia de producto, creo que me faltaba litros y peso para separar un poco de producto,
