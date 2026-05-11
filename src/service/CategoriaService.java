@@ -46,13 +46,14 @@ public class CategoriaService {
      */
     public List<Producto> filtrarPorCategoria(List<Producto> productos, Categoria categoria) {
         List<Producto> resultado = new ArrayList<>();
-        for (Producto p : productos) {
-            if (p.getCategoria() == categoria) {
+        for (var p : productos) {
+            if (p.getCategoria() == categoria.getNombre()) {
                 resultado.add(p);
             }
         }
         return resultado;
     }
+
     // para un futuro listado de subcategorías
     public List<SubCategoria> listarTodas() {
         return subcategorias;
