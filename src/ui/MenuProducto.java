@@ -1,40 +1,40 @@
 package ui;
 
-import model.Producto;
+import model.pedidos.LineaPedido;
+import model.pedidos.Pedido;
+import model.productos.Bebida;
+import model.productos.Comida;
+import model.productos.Producto;
+import service.PedidoService;
 import service.ProductoService;
 import util.Validador;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 /**
  * Maneja la interacción con el usuario a través del menú de consola.
- *
+ * <p>
  * Esta clase es responsable de:
  * - Mostrar el menú al usuario.
  * - Pedirle los datos necesarios para cada operación.
  * - Mostrar los resultados o mensajes informativos.
- *
- * No contiene lógica de negocio: para todo lo que tenga que ver
- * con guardar, buscar, actualizar o eliminar productos, delega en
- * el ProductoService. Tampoco controla el flujo del programa: eso
- * lo hace el Main, que decide cuándo llamar a cada método de esta
- * clase y atrapa las excepciones que puedan ocurrir.
+ * <p>
+ * No contiene lógica de negocio: delega en {@link ProductoService} y
+ * {@link PedidoService}. El Main controla el flujo y atrapa excepciones.
  */
 public class MenuProducto {
 
-    // Atributos: el Scanner y el Service que esta clase necesita
-    // para hacer su trabajo. Se reciben por constructor (no se
-    // crean acá adentro) para que quien instancia la clase tenga
-    // el control sobre qué Scanner y qué Service usar. Esto se
-    // llama "inyección por constructor" y es el mismo patrón que
-    // van a ver en Spring Boot.
     private final Scanner sc;
-    private final ProductoService service;
+    private final ProductoService productService;
+    private final PedidoService pedidoService;
 
-    public MenuProducto(Scanner sc, ProductoService service) {
+    public MenuProducto(Scanner sc, ProductoService productService, PedidoService pedidoService) {
         this.sc = sc;
-        this.service = service;
+        this.productService = productService;
+        this.pedidoService = pedidoService;
     }
 
     // ----------------------------------------------------------------
@@ -42,71 +42,97 @@ public class MenuProducto {
     // ----------------------------------------------------------------
 
     public void mostrarMenu() {
-        System.out.println("======= TechLab - Gestión de Productos =======");
+        System.out.println("══════════ TechLab — Gestión de Productos ══════════");
         System.out.println("1) Agregar producto");
         System.out.println("2) Listar productos");
-        System.out.println("3) Buscar producto por ID");
+        System.out.println("3) Buscar producto");
         System.out.println("4) Actualizar producto");
         System.out.println("5) Eliminar producto");
-        System.out.println("6) Salir");
-        System.out.println("==============================================");
+        System.out.println("6) Crear un pedido");
+        System.out.println("7) Listar pedidos");
+        System.out.println("8) Salir");
+        System.out.println("════════════════════════════════════════════════════");
     }
 
     // ----------------------------------------------------------------
-    // Operaciones del CRUD
+    // Operaciones del CRUD de Productos
     // ----------------------------------------------------------------
-    // Cada método corresponde a una opción del menú. Como los
-    // atributos sc y service ya están guardados en la instancia,
-    // los métodos no necesitan recibirlos por parámetro: los usan
-    // directamente con this.sc y this.service (Java permite omitir
-    // el "this" cuando no hay ambigüedad).
 
     public void agregarProducto() {
-        System.out.println("--- Nuevo producto ---");
+        System.out.println("=== Nuevo producto ===");
+        System.out.println("Tipo: #1 Producto genérico,  #2 Bebida,  #3 Comida");
+        int tipo = Validador.leerEntero(sc, "Elija una opción: ");
+
+        // Campos comunes a todos los tipos
         String nombre = Validador.leerTexto(sc, "Nombre: ");
         double precio = Validador.leerDouble(sc, "Precio: ");
         int stock = Validador.leerEntero(sc, "Stock: ");
         String categoria = Validador.leerTexto(sc, "Categoría: ");
 
-        // Construimos el producto y lo enviamos al servicio.
-        // El servicio se encarga de validar y de asignar el id.
-        Producto p = new Producto(nombre, precio, stock, categoria);
-        Producto guardado = service.guardar(p);
+        Producto p;
 
-        System.out.println("✔ Producto agregado con id " + guardado.getId());
+        switch (tipo) {
+            case 2 -> {
+                float litros = (float) Validador.leerDouble(sc, "Litros: ");
+                p = new Bebida(nombre, precio, stock, categoria, litros);
+            }
+            case 3 -> {
+                double peso = Validador.leerDouble(sc, "Peso en gramos: ");
+                p = new Comida(nombre, precio, stock, categoria, peso);
+            }
+            default -> p = new Producto(nombre, precio, stock, categoria);
+        }
+
+        Producto guardado = productService.guardar(p);
+        System.out.println("Producto agregado con id " + guardado.getId());
     }
 
     public void listarProductos() {
-        // Recibimos un List, ver explicación en ProductoService
-        List<Producto> lista = service.listarTodos();
+        List<Producto> lista = productService.listarTodos();
 
         if (lista.isEmpty()) {
             System.out.println("No hay productos cargados.");
             return;
         }
 
-        System.out.println("--- Catálogo ---");
+        System.out.println("--- Catálogo de productos ---");
         for (Producto p : lista) {
-            // Java llama automáticamente a p.toString() al
-            // imprimir un objeto con println.
             System.out.println(p);
         }
+        System.out.println("Total: " + lista.size() + " producto(s).");
     }
 
     public void buscarProducto() {
-        int id = Validador.leerEntero(sc, "Ingrese el id del producto: ");
-        // Si no existe, obtenerPorId lanza excepción y el catch
-        // del Main muestra el mensaje al usuario.
-        Producto p = service.obtenerPorId(id);
-        System.out.println("Encontrado: " + p);
+        System.out.println("Buscar por ID #1 o por Nombre #2");
+        int tipo = Validador.leerEntero(sc, "Elija una opción: ");
+
+        if (tipo == 1) {
+            int id = Validador.leerEntero(sc, "Ingrese el id del producto: ");
+            Producto p = productService.obtenerPorId(id);
+            System.out.println("Encontrado: " + p);
+
+        } else if (tipo == 2) {
+            String nombre = Validador.leerTexto(sc, "Ingrese el nombre o parte del nombre: ");
+            List<Producto> resultados = productService.buscarPorNombre(nombre);
+
+            if (resultados.isEmpty()) {
+                System.out.println("No se encontraron productos con ese nombre.");
+            } else {
+                System.out.println("Resultados (" + resultados.size() + "):");
+                for (Producto p : resultados) {
+                    System.out.println(p);
+                }
+            }
+
+        } else {
+            System.out.println("Opción inválida.");
+        }
     }
 
     public void actualizarProducto() {
         int id = Validador.leerEntero(sc, "Ingrese el id del producto a actualizar: ");
 
-        // Mostramos primero los datos actuales para que el usuario
-        // sepa qué está modificando.
-        Producto actual = service.obtenerPorId(id);
+        Producto actual = productService.obtenerPorId(id);
         System.out.println("Datos actuales: " + actual);
 
         System.out.println("--- Ingrese los nuevos datos ---");
@@ -116,14 +142,95 @@ public class MenuProducto {
         String categoria = Validador.leerTexto(sc, "Categoría: ");
 
         Producto datos = new Producto(nombre, precio, stock, categoria);
-        Producto actualizado = service.actualizar(id, datos);
+        Producto actualizado = productService.actualizar(id, datos);
 
         System.out.println("Producto actualizado: " + actualizado);
     }
 
     public void eliminarProducto() {
         int id = Validador.leerEntero(sc, "Ingrese el id del producto a eliminar: ");
-        service.eliminar(id);
-        System.out.println("Producto eliminado.");
+
+        // Mostramos el producto antes de eliminar
+        Producto p = productService.obtenerPorId(id);
+        System.out.println("Producto a eliminar: " + p);
+
+        String confirm = Validador.leerTexto(sc, "Seguro desea eliminar este producto? (s/n): ");
+        if (confirm.equalsIgnoreCase("s")) {
+            productService.eliminar(id);
+            System.out.println("Producto eliminado.");
+        } else {
+            System.out.println("Eliminación cancelada.");
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // Operaciones de Pedidos
+    // ----------------------------------------------------------------
+
+    public void crearPedido() {
+        List<Producto> catalogo = productService.listarTodos();
+
+        if (catalogo.isEmpty()) {
+            System.out.println("No hay productos disponibles. Agregue productos primero.");
+            return;
+        }
+
+        System.out.println("=== Crear pedido ===");
+
+        // Mostrar productos disponibles
+        System.out.println("Productos disponibles:");
+        for (Producto p : catalogo) {
+            System.out.println("  " + p);
+        }
+
+        int cantidadItems = Validador.leerEntero(sc, "\n Cuantos productos distintos va a cargar? ");
+
+        List<Integer> idsProducto = new ArrayList<>();
+        List<Integer> cantidades = new ArrayList<>();
+
+        for (int i = 1; i <= cantidadItems; i++) {
+            System.out.println("\n Producto #" + i + ":");
+            int idProducto = Validador.leerEntero(sc, "  ID del producto: ");
+
+            // Verificar que existe (obtenerPorId lanza excepción si no)
+            Producto p = productService.obtenerPorId(idProducto);
+            System.out.println("  -> " + p.getNombre() + " | Stock disponible: " + p.getStock());
+
+            int cantidad = Validador.leerEntero(sc, "  Cantidad: ");
+
+            idsProducto.add(idProducto);
+            cantidades.add(cantidad);
+        }
+
+        String cliente = Validador.leerTexto(sc, "\n Nombre del cliente : ");
+
+        // Preguntar si quiere fecha personalizada
+        Pedido pedido;
+        String fechaCustom = Validador.leerTexto(sc, "¿Desea ingresar una fecha personalizada? (s/n): ");
+        if (fechaCustom.equalsIgnoreCase("s")) {
+            LocalDate fecha = Validador.leerFecha(sc, "Ingrese la fecha (dd/MM/yyyy): ");
+            pedido = pedidoService.crearPedido(idsProducto, cantidades, cliente, fecha);
+        } else {
+            pedido = pedidoService.crearPedido(idsProducto, cantidades, cliente);
+        }
+
+        System.out.println("\n✔ Pedido creado exitosamente:");
+        System.out.println(pedido);
+    }
+
+    public void listarPedidos() {
+        List<Pedido> lista = pedidoService.listarTodos();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay pedidos registrados.");
+            return;
+        }
+
+        System.out.println("--- Pedidos registrados ---");
+        for (Pedido p : lista) {
+            System.out.println(p);
+            System.out.println();
+        }
+        System.out.println("Total: " + lista.size() + " pedido(s).");
     }
 }
