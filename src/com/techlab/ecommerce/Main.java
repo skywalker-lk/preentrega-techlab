@@ -15,13 +15,11 @@ import java.util.Scanner;
 
 /**
  * Clase principal: punto de entrada del programa.
- *
  * Su única responsabilidad es ORQUESTAR la ejecución:
  * - Crear el servicio y el menú.
  * - Controlar el bucle del menú hasta que el usuario decida salir.
  * - Atrapar las excepciones que puedan surgir y mostrar el mensaje
  *   al usuario sin que el programa se cierre.
- *
  * Toda la interacción con el usuario está delegada en MenuProducto.
  * La lógica de negocio está en ProductoService.
  */

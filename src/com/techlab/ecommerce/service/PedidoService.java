@@ -15,7 +15,7 @@ import java.util.List;
  * Capa de servicio para la gestión de pedidos.
  *
  * Depende de ProductoService para obtener productos y descontar stock.
- * Crea pedidos con líneas, valida stock antes de confirmar y descuenta
+ * Crea pedidos con líneas, validar stock antes de confirmar y descuenta
  * el stock automáticamente al confirmar.
  */
 public class PedidoService {
@@ -107,7 +107,8 @@ public class PedidoService {
         }
         throw new PedidoNoEncontradoException("No se encontró un pedido con id " + id);
     }
-
+    // no se utiliza aún la cantidad de artículos, debería consultarse antes de obtener el listado
+    // para poder paginar luego.
     public int obtenerCantidad() {
         return pedidos.size();
     }

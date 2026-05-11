@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Representa un pedido realizado por un cliente.
  * Contiene una lista de LineaPedido y calcula automáticamente el total.
- * El id se asigna automáticamente con un contador estático.
+ * El identificador se asigna automáticamente con un contador estático.
  */
 public class Pedido {
     private static int contadorId = 1;
@@ -79,10 +79,10 @@ public class Pedido {
         sb.append("Productos:\n");
         for (LineaPedido lp : lineas) {
             sb.append("  - ").append(lp.getProducto().getNombre())
-              .append(" x").append(lp.getCantidad())
-              .append(" @ $").append(String.format("%.2f", lp.getPrecioUnitario()))
-              .append(" = $").append(String.format("%.2f", lp.getSubtotal()))
-              .append("\n");
+                    .append(" x").append(lp.getCantidad())
+                    .append("( $").append(String.format("%.2f", lp.getPrecioUnitario())).append(" ) ")
+                    .append(" = $").append(String.format("%.2f", lp.getSubtotal()))
+                    .append("\n");
         }
         sb.append("─────────────────────────\n");
         sb.append("TOTAL: $").append(String.format("%.2f", total)).append("\n");

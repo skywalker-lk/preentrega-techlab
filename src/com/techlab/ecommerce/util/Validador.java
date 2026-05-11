@@ -11,11 +11,9 @@ import java.util.Scanner;
 
 /**
  * Clase utilitaria con métodos de validación reutilizables.
- *
  * Todos los métodos son estáticos: no necesitamos crear una
  * instancia de Validador para usarlos. Se invocan directamente
  * con Validador.validarPrecio(...), Validador.leerEntero(...), etc.
- *
  * Separar las validaciones en su propia clase mantiene al
  * ProductoService enfocado en la lógica de negocio y al menú
  * enfocado en la interacción con el usuario.

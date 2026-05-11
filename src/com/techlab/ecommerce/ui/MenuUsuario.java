@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Sub-menú de gestión de usuarios.
+ * Submenu de gestión de usuarios.
  * Tiene su propio loop interno y se invoca desde el menú principal.
  */
 public class MenuUsuario {

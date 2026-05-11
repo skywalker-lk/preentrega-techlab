@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Capa de servicio para la gestión de usuarios.
  * Administra el registro, listado y eliminación de usuarios.
- * Soporta herencia: el método registrar(String, String, String, String, RolUsuario)
+ * Soporta herencia: el método registrar(nombre, apellido, email, telefono, rol)
  * crea una instancia de Cliente, Administrador,
  * o un Usuario genérico según el rol.
  * guardamos cualquier subclase como tipo Usuario.
