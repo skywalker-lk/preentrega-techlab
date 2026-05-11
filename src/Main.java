@@ -1,10 +1,19 @@
 import java.util.Scanner;
 
+import exception.PedidoNoEncontradoException;
 import exception.ProductoNoEncontradoException;
 import exception.StockInsuficienteException;
-import model.Producto;
+
+import model.productos.Bebida;
+import model.productos.Comida;
+import model.productos.Producto;
+
+import service.PedidoService;
 import service.ProductoService;
+import service.UsuarioService;
+
 import ui.MenuProducto;
+import ui.MenuUsuario;
 import util.Validador;
 
 /**
@@ -26,26 +35,27 @@ public class Main {
     public static void main(String[] args) {
         // Creamos las dependencias una sola vez y las compartimos
         // durante toda la ejecución del programa.
-        ProductoService service = new ProductoService();
+        ProductoService productService = new ProductoService();
+        PedidoService pedidoService = new PedidoService(productService);
         Scanner sc = new Scanner(System.in);
-        MenuProducto menu = new MenuProducto(sc, service);
+        MenuProducto menu = new MenuProducto(sc, productService, pedidoService);
 
         // Carga inicial de productos de prueba.
         // Comentar esta línea si se quiere arrancar con el catálogo vacío.
-        cargarDatosDePrueba(service);
+        cargarDatosDePrueba(productService);
 
         int opcion;
 
         // do-while garantiza que el menú se muestre al menos una
-        // vez. Se repite hasta que el usuario elige la opción 6.
+        // vez. Se repite hasta que el usuario elige la opción 7.
         do {
             menu.mostrarMenu();
             opcion = Validador.leerEntero(sc, "Elija una opción: ");
 
-            // Cada opción del menú está envuelta en try/catch.
-            // Si una operación lanza una excepción (producto
+            // Cada opcion del menú envuelta en try/catch.
+            // Si una operacion lanza una excepcion (producto
             // inexistente, datos inválidos, etc.), el programa NO
-            // se cae: muestra el mensaje y vuelve a mostrar el menú.
+            // se crashea: muestra el mensaje y vuelve a mostrar el menú.
             try {
                 switch (opcion) {
                     case 1 -> menu.agregarProducto();
@@ -53,16 +63,18 @@ public class Main {
                     case 3 -> menu.buscarProducto();
                     case 4 -> menu.actualizarProducto();
                     case 5 -> menu.eliminarProducto();
-                    case 6 -> System.out.println("¡Hasta luego!");
-                    default -> System.out.println("Opción inválida. Elija un número del 1 al 6.");
+                    case 6 -> menu.crearPedido();
+                    case 7 -> menu.listarPedidos();
+                    case 8 -> System.out.println("Hasta la vista...!");
+                    default -> System.out.println("Opción inválida. Elija un número del 1 al 8.");
                 }
-            } catch (ProductoNoEncontradoException | StockInsuficienteException e) {
+            } catch (ProductoNoEncontradoException | StockInsuficienteException | PedidoNoEncontradoException e) {
                 // Capturamos nuestras excepciones personalizadas.
                 // Cada una tiene su propio mensaje, definido al
                 // momento de lanzarla en el servicio o el validador.
                 System.out.println(e.getMessage());
-            } catch (IllegalArgumentException e) {
-                // IllegalArgumentException es la que lanza el
+            } catch (Exception e) {
+                // Exception es la que lanza el
                 // Validador para datos genéricos inválidos
                 // (nombre vacío, precio negativo, etc.).
                 System.out.println("Dato inválido: " + e.getMessage());
@@ -70,7 +82,7 @@ public class Main {
 
             System.out.println(); // línea en blanco entre operaciones
 
-        } while (opcion != 6);
+        } while (opcion != 8);
 
         sc.close();
     }
@@ -89,11 +101,11 @@ public class Main {
     // respeta el encapsulamiento y nos asegura que los productos de
     // prueba pasen por las mismas validaciones que cualquier otro.
     private static void cargarDatosDePrueba(ProductoService service) {
-        service.guardar(new Producto("Café molido 500g", 4500, 30, "Bebidas"));
-        service.guardar(new Producto("Yerba mate 1kg", 3200, 50, "Bebidas"));
-        service.guardar(new Producto("Galletitas dulces", 1850, 100, "Almacén"));
-        service.guardar(new Producto("Aceite de oliva 500ml", 6700, 20, "Almacén"));
-        service.guardar(new Producto("Chocolate amargo 70%", 2900, 15, "Golosinas"));
+        service.guardar(new Bebida("Café molido 500g", 4500, 30, "Bebidas", 0.5f));
+        service.guardar(new Bebida("Yerba mate 1kg", 3200, 50, "Bebidas", 1.0f));
+        service.guardar(new Comida("Galletitas dulces", 1850, 100, "Almacén", 200));
+        service.guardar(new Comida("Aceite de oliva 500ml", 6700, 20, "Almacén", 500));
+        service.guardar(new Comida("Chocolate amargo 70%", 2900, 15, "Golosinas", 100));
         System.out.println("✔ Se cargaron 5 productos de prueba.\n");
     }
 }
