@@ -2,6 +2,10 @@ package util;
 
 import exception.StockInsuficienteException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -101,5 +105,21 @@ public class Validador {
         // (cada función con una sola responsabilidad).
         System.out.print(mensaje);
         return sc.nextLine(); // lee un String completo hasta el Enter y lo devuelve.
+    }
+
+    /**
+     * Lee una fecha en formato string dd/MM/yyyy a fecha desde el usuario.
+     */
+    public static LocalDate leerFecha(Scanner sc, String mensaje) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                String fechaStr = sc.nextLine();
+                return LocalDate.parse(fechaStr, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Debe ingresar una fecha valida en formato dd/mm/yyyy. Intente nuevamente por favor.");
+            }
+        }
     }
 }
