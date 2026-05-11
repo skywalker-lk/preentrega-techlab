@@ -1,6 +1,6 @@
 package service;
 
-import model.Producto;
+import model.productos.Producto;
 import util.Validador;
 
 import exception.ProductoNoEncontradoException;
@@ -66,6 +66,20 @@ public class ProductoService {
     // este método sigue funcionando sin cambios.
     public List<Producto> listarTodos() {
         return productos;
+    }
+
+    // READ: busca productos por nombre (búsqueda parcial lowercase).
+    // Devuelve una lista con todos los que coinciden. Si no hay
+    // resultados, la lista viene vacia (nunca null).
+    public List<Producto> buscarPorNombre(String nombre) {
+        List<Producto> resultados = new ArrayList<>();
+        String busqueda = nombre.toLowerCase().trim();
+        for (Producto p : productos) {
+            if (p.getNombre().toLowerCase().contains(busqueda)) {
+                resultados.add(p);
+            }
+        }
+        return resultados;
     }
 
     // READ: busca un producto por id. Si no existe, lanza excepción.
